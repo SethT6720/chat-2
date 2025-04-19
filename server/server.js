@@ -3,9 +3,13 @@ import express from 'express';
 import http from 'node:http';
 import { Server as SocketIOServer } from 'socket.io';
 import cors from 'cors';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
+
+console.log('Client URL:', process.env.CLIENT_URL);
 
 app.use(cors({
     origin: process.env.CLIENT_URL, // Replace with your client URL
