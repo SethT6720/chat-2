@@ -11,14 +11,20 @@ const server = http.createServer(app);
 
 console.log('Client URL:', process.env.CLIENT_URL);
 
+const allowedOrigins = [process.env.CLIENT_URL,
+    /\.vercel\.app$/,
+]; // Replace with your client URL
+
 app.use(cors({
-    origin: process.env.CLIENT_URL, // Replace with your client URL
+    origin: allowedOrigins,
+    credentials: true,
     methods: ['GET', 'POST']
 }))
 
 const io = new SocketIOServer(server, {
     cors: {
-        origin: process.env.CLIENT_URL, // Replace with your client URL
+        origin: allowedOrigins,
+        credentials: true,
         methods: ['GET', 'POST']
     }
 });
