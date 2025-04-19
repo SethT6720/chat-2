@@ -8,13 +8,13 @@ const app = express();
 const server = http.createServer(app);
 
 app.use(cors({
-    origin: 'http://localhost:5173', // Replace with your client URL
+    origin: process.env.CLIENT_URL, // Replace with your client URL
     methods: ['GET', 'POST']
 }))
 
 const io = new SocketIOServer(server, {
     cors: {
-        origin: 'http://localhost:5173', // Replace with your client URL
+        origin: process.env.CLIENT_URL, // Replace with your client URL
         methods: ['GET', 'POST']
     }
 });
