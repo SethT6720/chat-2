@@ -33,16 +33,36 @@ app.get('/', (req, res) => {
     res.send('Chat server is running!');
 });
 
+const users = new Map();
+
 io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
 
-    socket.on('chat message', (message) => {
+    socket.on('check nickname', (nickname, callback) => {
+        console.log('Checking nickname:', nickname);
+        let isAvailable = !Array.from(users.values()).includes(nickname);
+        if (users.get(socket.id) === nickname) {
+            isAvailable = true;
+        }
+        callback(isAvailable);
+    });
+
+    socket.on('set nickname', (nickname) => {
+        console.log('Setting nickname:', nickname);
+        users.set(socket.id, nickname);
+        io.emit('user list', Array.from(users.values())); // Broadcast the updated user list
+        console.log('Connected users:', users);
+    });
+
+    socket.on('chat message', (message, nickname) => {
         console.log('Message received:', message);
-        io.emit('chat message', message); // Broadcast the message to all connected clients
+        io.emit('chat message', message, nickname); // Broadcast the message to all connected clients
     });
 
     socket.on('disconnect', () => {
         console.log('A user disconnected:', socket.id);
+        users.delete(socket.id);
+        io.emit('user list', Array.from(users.values())); // Broadcast the updated user list
     });
 
 });
