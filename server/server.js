@@ -51,12 +51,17 @@ io.on('connection', (socket) => {
         console.log('Setting nickname:', nickname);
         users.set(socket.id, nickname);
         io.emit('user list', Array.from(users.values())); // Broadcast the updated user list
-        console.log('Connected users:', users);
+        console.log('Connected users:', Array.from(users.values()));
     });
 
     socket.on('chat message', (message, nickname) => {
         console.log('Message received:', message);
         io.emit('chat message', message, nickname); // Broadcast the message to all connected clients
+    });
+
+    socket.on('request user list', () => {
+        console.log('User list requested');
+        io.emit('user list', Array.from(users.values())); // Broadcast the user list to all connected clients
     });
 
     socket.on('disconnect', () => {

@@ -19,7 +19,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 <Routes>
                     <Route path='/' element={<Landing />} />
                     <Route path='/guest' element={<Guest />} />
-                    <Route path='/chat' element={<ChatPage />} />
+                    <Route path='/chat' element={<Chat />} />
+                    <Route path='/chatpage' element={<ChatPage />} />
                 </Routes>
             </BrowserRouter>
         </UserProvider>

@@ -12,6 +12,7 @@ export default function Guest() {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!nickname.trim()) {
+            console.log("Nickname is required");
             setError("Nickname is required");
             return;
         }

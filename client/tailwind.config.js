@@ -6,7 +6,15 @@ export default {
         "./src/**/*.{js,jsx}",
     ],
     theme: {
-        extend: {},
+        extend: {
+            scrollbar: {
+                DEFAULT: {
+                    thickness: 'thin',
+                },
+            },
+        },
     },
-    plugins: [],
+    plugins: [
+        require('tailwind-scrollbar'),
+    ],
 }
