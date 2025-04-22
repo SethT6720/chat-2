@@ -33,7 +33,7 @@ export default function Chat() {
             </div>
             
             <div className="flex overflow-y-auto flex-1 gap-4">
-                <div className="flex-1 overflow-y-auto bg-gray-800 rounded p-4 mb-4 scrollbar-custom">
+                <div className="flex-1 overflow-y-auto bg-gray-800 rounded p-4 mb-4 scrollbar scrollbar-thumb-gray-700 scrollbar-track-transparent">
                     <ul className="space-y-2">
                         {messages.map((msg, i) => (
                             <li key={i} className="bg-gray-700 p-2 rounded break-words">{msg}</li>
