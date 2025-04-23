@@ -22,6 +22,7 @@ app.use(cors({
 }))
 
 const io = new SocketIOServer(server, {
+    connectionStateRecovery: {},
     cors: {
         origin: allowedOrigins,
         credentials: true,
@@ -34,9 +35,22 @@ app.get('/', (req, res) => {
 });
 
 const users = new Map();
+const messages = [];
+const MAX_MESSAGES = 50;
 
 io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
+    socket.emit('message history', messages); // Send message history to the newly connected user
+
+    socket.on('request messages', () => {
+        console.log('Message history requested');
+        socket.emit('message history', messages); // Send message history to the requesting user
+    });
+
+    socket.on('login', (nickname) => {
+        console.log('User logged in with nickname:', nickname);
+        io.emit('join leave message', `${nickname} has joined the chat`);
+    });
 
     socket.on('check nickname', (nickname, callback) => {
         console.log('Checking nickname:', nickname);
@@ -55,7 +69,17 @@ io.on('connection', (socket) => {
     });
 
     socket.on('chat message', (message, nickname) => {
-        console.log('Message received:', message);
+        const msgData = {
+            content: message,
+            sender: nickname,
+            timestamp: Date.now()
+        }
+
+        messages.push(msgData);
+        if (messages.length > MAX_MESSAGES) {
+            messages.shift(); // Remove the oldest message if we exceed the limit
+        }
+
         io.emit('chat message', message, nickname); // Broadcast the message to all connected clients
     });
 
@@ -66,6 +90,7 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         console.log('A user disconnected:', socket.id);
+        io.emit('join leave message', `${users.get(socket.id)} has left the chat`);
         users.delete(socket.id);
         io.emit('user list', Array.from(users.values())); // Broadcast the updated user list
     });
